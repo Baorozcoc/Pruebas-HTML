@@ -1,0 +1,85 @@
+#calendario{
+    display: flex;
+    flex-direction: column;
+    background-color: brown;
+    border-radius: 30px;
+    padding: 10px;
+    align-items: center;
+    width: 100%;
+    color: rgb(255, 255, 255);
+}
+    .semestre{
+        display: flex;
+        background-color: rgb(0, 0, 0);
+        border-radius: 15px;
+        width: 100%;
+        margin: 10px;
+        justify-content: space-around;
+        align-items: center;
+        
+    }
+    .semestre h2{
+        margin-bottom: 0;
+        margin-top: 0;
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+    .contenido{
+        width: 85%;
+        display: flex;
+        flex-wrap: wrap;
+        background-color: white;
+        border-radius: 15px;
+        color: #000;
+    }
+    .materia{
+        width: 230px;
+        margin:10px 5px
+    }
+    .materiav2{
+        
+        border: 2px solid #000;
+        background-color: white;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        transition: .5s all;
+    }
+    .materiav2:hover{
+        transform: scale(1.2,1.2);
+    }
+    .encabezado{
+        display: flex;
+        justify-content: space-around;
+        width: 100%;
+        background-color: rgb(0, 0, 0);
+        color: rgb(255, 255, 255);
+    }
+    .encabezado2{
+        display: flex;
+        justify-content: space-around;
+        width: 100%;
+        background-color: rgb(9, 51, 114);
+        color: rgb(255, 255, 255);
+    }
+    .encabezado3{
+        display: flex;
+        justify-content: space-around;
+        width: 100%;
+        background-color: rgb(255, 174, 0);
+        color: rgb(255, 255, 255);
+    }
+#materiasPendientes{
+    padding: 10px;
+    background-color: rgb(42, 75, 165);
+    color: rgb(255, 255, 255);
+    text-align: center;
+    width: 100%;  
+    border-radius: 30px;
+}
+.pendientes{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-around;
+}

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="horario_styles.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        <div id="calendario">
+            <h1>Mi Calendario de Materias</h1>
+            
+            <div v-for="(valor, llave) in semestres" class="semestre p-2">
+                <h2>Semestre {{llave}}</h2>
+                <div class="contenido">
+                    <div v-for="n in valor.length" class="materia">
+                        <div v-for="mate in materias" v-if="mate.id==valor[n-1]" class="materiav2">
+                            <div v-if="mate.tipo=='obligatoria'" class="encabezado">
+                                <div>Creditos:{{mate.creditos}}</div>
+                                <div>Nota:{{mate.nota}}</div>
+                            </div>
+                            <div v-if="mate.tipo=='electiva'" class="encabezado2">
+                                <div>Creditos: {{mate.creditos}}</div>
+                                <div>Nota: {{mate.nota}}</div>
+                            </div>
+                            <div class="nombre">{{mate.nombre}}</div>
+                        </div>            
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div id="materiasPendientes">
+            <h2>Materias Pendientes</h2>
+            <br>
+            <div class="pendientes">
+                <div v-for="materia in materias" class="materia materiav2" v-if="!materia.completada">
+                    <div class="encabezado bg-danger" v-if="materia.tipo=='obligatoria'">Creditos:{{materia.creditos}}</div>
+                    <div class="encabezado2" v-if="materia.tipo=='electiva'">Creditos:{{materia.creditos}}</div>
+                    <div class="encabezado3" v-if="materia.tipo=='otros'">Creditos:{{materia.creditos}}</div>
+                    <div class="nombre text-dark">
+                        {{materia.nombre}}
+                    </div>
+                    <div v-if="PreReq(materia)" class="text-danger">
+                        <b>TIENE PREREQUISITOS</b> <br>
+                        <div v-for="(item,index) in NombrePreReq(materia.idRequisitos)">
+                            {{item}}
+                        </div>                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script>
+        const app=new Vue({
+            el:'#app',
+            data:{
+                materias:{
+                    materia1:{id:0,nombre: "Calculo Diferencial",creditos:4,idRequisitos:"",tipo:"obligatoria", nota:3.1, completada:true},
+                    materia2:{id:1,nombre: "Intro a la Ing de Sistemas",creditos:3,idRequisitos:"",tipo:"obligatoria", nota:4.2,completada:true},
+                    materia3:{id:2,nombre: "Program de Computadores",creditos:3,idRequisitos:"",tipo:"obligatoria", nota:4.0,completada:true},
+                    materia4:{id:3,nombre: "Catedra de Inducción",creditos:2,idRequisitos:"",tipo:"electiva", nota:5,completada:true},
+                    materia5:{id:4,nombre: "Catedra JGA",creditos:2,idRequisitos:"",tipo:"electiva", nota:3.3,completada:true},
+                    materia6:{id:5,nombre: "Prog. Orientada a Objetos",creditos:3,idRequisitos:"",tipo:"obligatoria", nota:3.6,completada:true},
+                    materia7:{id:6,nombre: "Algebra Lineal",creditos:4,idRequisitos:"",tipo:"obligatoria", nota:3.1,completada:true},
+                    materia8:{id:7,nombre: "Calculo Integral",creditos:4,idRequisitos:"",tipo:"obligatoria", nota:3.0,completada:true},
+                    materia9:{id:8,nombre: "Bases de datos",creditos:3,idRequisitos:"",tipo:"obligatoria", nota:4.3,completada:true},
+                    materia10:{id:9,nombre: "Elementos de Computadores",creditos:3,idRequisitos:"",tipo:"obligatoria", nota:3.6,completada:true},
+                    materia11:{id:10,nombre: "Chino 1",creditos:3,idRequisitos:"",tipo:"electiva", nota:4.6,completada:true},
+                    materia12:{id:11,nombre: "Probabilidad y estadistica",creditos:3,idRequisitos:"",tipo:"obligatoria", nota:3.4,completada:true},
+                    materia13:{id:12,nombre: "Matematicas Discretas 1",creditos:4,idRequisitos:"",tipo:"obligatoria", nota:3.8,completada:true},
+                    materia14:{id:13,nombre: "Estructuras de Datos",creditos:3,idRequisitos:"",tipo:"obligatoria", nota:5.0,completada:true},
+                    materia15:{id:14,nombre: "Fundamentos de Mecanica",creditos:4,idRequisitos:"",tipo:"obligatoria", nota:3.7,completada:true},
+                    materia16:{id:15,nombre: "Ciudad, Hab y Vivienda",creditos:3,idRequisitos:"",tipo:"electiva", nota:4.4,completada:true},
+                    materia17:{id:16,nombre: "Arquitectura de Computadores",creditos:3,idRequisitos:"",tipo:"obligatoria", nota:3.9,completada:true},
+                    materia18:{id:17,nombre: "Calculo Multivariado",creditos:4,idRequisitos:"",tipo:"obligatoria", nota:3.7,completada:true},
+                    materia19:{id:18,nombre: "Electricidad y Magnetismo",creditos:4,idRequisitos:"",tipo:"obligatoria", nota:3.0,completada:true},
+                    materia20:{id:19,nombre: "Ingesoft 1",creditos:3,idRequisitos:"",tipo:"obligatoria", nota:3.7,completada:true},
+                    materia21:{id:20,nombre: "Chino 2",creditos:3,idRequisitos:"",tipo:"electiva", nota:4.9,completada:true},
+                    materia22:{id:21,nombre: "De Serrat a los BeeGees",creditos:3,idRequisitos:"",tipo:"electiva", nota:3.2,completada:true},
+                    materia23:{id:22,nombre: "Intro a la Teoria de la Computación",creditos:4,idRequisitos:"",tipo:"obligatoria", nota:3.2,completada:true},
+                    materia24:{id:23,nombre: "Matematicas Discretas 2",creditos:4,idRequisitos:"",tipo:"obligatoria", nota:4.4,completada:true},
+                    materia25:{id:24,nombre: "Desarrollo de la Ing en Colombia",creditos:3,idRequisitos:"",tipo:"electiva", nota:4.3,completada:true},
+                    materia26:{id:25,nombre: "Algoritmos",creditos:3,idRequisitos:"",tipo:"obligatoria", nota:4.0,completada:true},
+                    materia27:{id:26,nombre: "Ingeniería Economica",creditos:3,idRequisitos:"",tipo:"obligatoria", nota:4.9,completada:true},
+                    materia28:{id:27,nombre: "Catedra PJC",creditos:3,idRequisitos:"",tipo:"electiva", nota:4.4,completada:true},
+                    materia29:{id:28,nombre: "Modelos y Simulación",creditos:3,idRequisitos:"",tipo:"obligatoria", nota:4.8,completada:true},
+                    materia30:{id:29,nombre: "Metodos Numericos",creditos:3,idRequisitos:"",tipo:"obligatoria", nota:4.4,completada:true},
+                    materia31:{id:30,nombre: "Redes de Computadores",creditos:3,idRequisitos:"",tipo:"obligatoria", nota:4.5,completada:true},
+                    materia32:{id:31,nombre: "Ingesoft 2",creditos:3,idRequisitos:"",tipo:"obligatoria", nota:4.2,completada:true},
+                    materia33:{id:32,nombre: "Teoria de la Info",creditos:3,idRequisitos:"",tipo:"obligatoria", nota:4.2,completada:true},
+                    materia34:{id:33,nombre: "Gerencia y Gestión",creditos:3,idRequisitos:"",tipo:"obligatoria", nota:4.3,completada:true},
+                    materia35:{id:34,nombre: "Sistemas Operativos",creditos:3,idRequisitos:"",tipo:"obligatoria", nota:5.0,completada:true},
+                    materia36:{id:35,nombre: "Optimización",creditos:3,idRequisitos:"",tipo:"obligatoria", nota:4.2,completada:true},
+                    materia37:{id:36,nombre: "Grafica Interactiva",creditos:3,idRequisitos:"",tipo:"electiva", nota:4.0,completada:true},
+                    materia38:{id:37,nombre: "Sistemas de info",creditos:3,idRequisitos:"",tipo:"obligatoria", nota:0,completada:false},
+                    materia39:{id:38,nombre: "Arquitectura de Software",creditos:3,idRequisitos:"",tipo:"obligatoria", nota:0,completada:false},
+                    materia40:{id:39,nombre: "Intro a los sistemas inteligentes",creditos:3,idRequisitos:"",tipo:"obligatoria", nota:0,completada:false},
+                    materia41:{id:40,nombre: "Lenguajes de programación",creditos:3,idRequisitos:"",tipo:"obligatoria", nota:0,completada:false},
+                    materia42:{id:41,nombre: "Compu paralela y distribuida",creditos:3,idRequisitos:"",tipo:"obligatoria", nota:0,completada:false},
+                    materia43:{id:42,nombre: "Computación visual",creditos:3,idRequisitos:"",tipo:"obligatoria", nota:0,completada:false},
+                    materia44:{id:43,nombre: "Criptografia",creditos:3,idRequisitos:"",tipo:"obligatoria", nota:0,completada:false},
+                    materia45:{id:44,nombre: "Modelos estocasticos",creditos:3,idRequisitos:"",tipo:"obligatoria", nota:0,completada:false},
+                    materia46:{id:45,nombre: "Pensamiento Sistemico",creditos:3,idRequisitos:[37],tipo:"obligatoria", nota:0,completada:false}
+                    ,
+                    materia47:{id:46,nombre: "Arquitectura de Infraestr y TICs",creditos:3,idRequisitos:[37,38],tipo:"obligatoria", nota:0,completada:false},
+                    materia48:{id:47,nombre: "Taller de Proyectos Interdisciplinarios",creditos:3,idRequisitos:"",tipo:"obligatoria", nota:0,completada:false},
+                    materia49:{id:48,nombre: "Trabajo de Grado",creditos:6,idRequisitos:"",tipo:"obligatoria", nota:0,completada:false},
+                    materia50:{id:49,nombre: "electiva1",creditos:3,idRequisitos:"",tipo:"electiva", nota:0,completada:false},
+                    materia51:{id:50,nombre: "electiva2",creditos:3,idRequisitos:"",tipo:"electiva", nota:0,completada:false},
+                    materia52:{id:51,nombre: "electiva3",creditos:2,idRequisitos:"",tipo:"electiva", nota:0,completada:false},
+                    materia53:{id:52,nombre: "SABER-PRO",creditos:0,idRequisitos:"",tipo:"otros", nota:0,completada:false},
+                    materia54:{id:53,nombre: "PASANTIA",creditos:0,idRequisitos:"",tipo:"otros", nota:0,completada:false},
+                },
+                semestres:{
+                    1:[0,1,2,3,4],
+                    2:[5,6],
+                    3:[7,8,9,10],
+                    4:[11,12,13,14,15],
+                    5:[16,17,18,19,20,21],
+                    6:[22,23,24],
+                    7:[25,26,27],
+                    8:[28,29,30],
+                    9:[31,32,33,34,35,36]
+                },
+                temp:""
+                
+            },
+            methods:{
+                PreReq(materia){
+                    var a=materia.idRequisitos.length;
+                    if (a==0) {
+                        return false;
+                    }
+                    for (let i = 0; i <a ; i++) {
+                        var b= Object.keys(this.materias);
+
+                        for (let j=0; j<b.length; j++) {
+                            let mate=b[j];
+                             if (materia.idRequisitos[i]==this.materias[mate].id) {
+                                if (this.materias[mate].completada==false) {
+                                    return true
+                                }
+                            }
+                        }
+                    }
+                    return false
+                },
+                NombrePreReq(arreglo){
+                    var arr=[];
+                    var a=Object.keys(this.materias);
+                    for (let i = 0; i < a.length; i++) {
+                        let mate=a[i];
+                        for (let j = 0; j < arreglo.length; j++) {
+                            if (this.materias[mate].id==arreglo[j]) {
+                                arr.push(this.materias[mate].nombre);
+                            }
+                        }
+
+                    }
+                    return arr;
+                }
+            }
+        })
+    </script>
+</body>
+</html>
