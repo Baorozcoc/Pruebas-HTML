@@ -37,6 +37,7 @@
     .contenido{
         width: 85%;
         display: flex;
+        justify-content: space-around;
         flex-wrap: wrap;
         background-color: #5b5b5b;
         border-radius: 15px;
