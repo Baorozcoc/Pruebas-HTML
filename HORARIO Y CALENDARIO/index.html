@@ -23,8 +23,8 @@
                     <div v-for="n in valor.length" class="materia">
                         <div v-for="mate in materias" v-if="mate.id==valor[n-1]" class="materiav2">
                             <div v-if="mate.tipo=='obligatoria'" class="encabezado">
-                                <div>Creditos:{{mate.creditos}}</div>
-                                <div>Nota:{{mate.nota}}</div>
+                                <div>Creditos: {{mate.creditos}}</div>
+                                <div>Nota: {{mate.nota}}</div>
                             </div>
                             <div v-if="mate.tipo=='electiva'" class="encabezado2">
                                 <div>Creditos: {{mate.creditos}}</div>
