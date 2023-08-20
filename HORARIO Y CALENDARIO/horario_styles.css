@@ -38,8 +38,9 @@
         width: 85%;
         display: flex;
         flex-wrap: wrap;
-        background-color: white;
+        background-color: #5b5b5b;
         border-radius: 15px;
+        margin-right: 10px;
         color: #000;
     }
     .materia{
