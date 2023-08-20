@@ -1,11 +1,12 @@
 #calendario{
     display: flex;
     flex-direction: column;
-    background-color: brown;
+    background-color: #212121;
     border-radius: 30px;
     padding: 10px;
     align-items: center;
     width: 100%;
+    text-align: center;
     color: rgb(255, 255, 255);
 }
     .semestre{
@@ -16,13 +17,22 @@
         margin: 10px;
         justify-content: space-around;
         align-items: center;
+
+        .titulo-semestre{
+            @media only screen and (max-width:500px){
+                writing-mode: tb-rl;
+                transform: rotate(180deg);
+                margin: auto;
+              }
+        }
+
+        h2{
+            margin-bottom: 0;
+            margin-top: 0;
+            margin-left: 10px;
+            margin-right: 10px;
+        }
         
-    }
-    .semestre h2{
-        margin-bottom: 0;
-        margin-top: 0;
-        margin-left: 10px;
-        margin-right: 10px;
     }
     .contenido{
         width: 85%;
@@ -47,6 +57,8 @@
     }
     .materiav2:hover{
         transform: scale(1.2,1.2);
+        cursor: pointer;
+        user-select: none;
     }
     .encabezado{
         display: flex;

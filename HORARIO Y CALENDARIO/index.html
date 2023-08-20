@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="esp">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -15,9 +15,9 @@
     <div id="app">
         <div id="calendario">
             <h1>Mi Calendario de Materias</h1>
-            
+            <div>Promedio: {{promedio}}</div>
             <div v-for="(valor, llave) in semestres" class="semestre p-2">
-                <h2>Semestre {{llave}}</h2>
+                <h2 class="titulo-semestre">Semestre {{llave}}</h2>
                 <div class="contenido">
                     <div v-for="n in valor.length" class="materia">
                         <div v-for="mate in materias" v-if="mate.id==valor[n-1]" class="materiav2">
@@ -29,6 +29,10 @@
                                 <div>Creditos: {{mate.creditos}}</div>
                                 <div>Nota: {{mate.nota}}</div>
                             </div>
+                            <div v-if="mate.tipo=='otros'" class="encabezado3">
+                                <div>Creditos: {{mate.creditos}}</div>
+                                <div>Nota: {{mate.nota}}</div>
+                            </div>
                             <div class="nombre">{{mate.nombre}}</div>
                         </div>            
                     </div>
@@ -36,7 +40,7 @@
             </div>
         </div>
         <br>
-        <div id="materiasPendientes">
+        <div id="materiasPendientes" v-if="hayMateriasSinCompletar()">
             <h2>Materias Pendientes</h2>
             <br>
             <div class="pendientes">
@@ -56,7 +60,6 @@
                 </div>
             </div>
         </div>
-        
     </div>
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
     <script>
@@ -98,27 +101,26 @@
                     materia32:{id:31,nombre: "Ingesoft 2",creditos:3,idRequisitos:"",tipo:"obligatoria", nota:4.2,completada:true},
                     materia33:{id:32,nombre: "Teoria de la Info",creditos:3,idRequisitos:"",tipo:"obligatoria", nota:4.2,completada:true},
                     materia34:{id:33,nombre: "Gerencia y Gestión",creditos:3,idRequisitos:"",tipo:"obligatoria", nota:4.3,completada:true},
-                    materia35:{id:34,nombre: "Sistemas Operativos",creditos:3,idRequisitos:"",tipo:"obligatoria", nota:5.0,completada:true},
+                    materia35:{id:34,nombre: "Sistemas Operativos",creditos:3,idRequisitos:"",tipo:"obligatoria", nota:4.8,completada:true},
                     materia36:{id:35,nombre: "Optimización",creditos:3,idRequisitos:"",tipo:"obligatoria", nota:4.2,completada:true},
                     materia37:{id:36,nombre: "Grafica Interactiva",creditos:3,idRequisitos:"",tipo:"electiva", nota:4.0,completada:true},
-                    materia38:{id:37,nombre: "Sistemas de info",creditos:3,idRequisitos:"",tipo:"obligatoria", nota:0,completada:false},
-                    materia39:{id:38,nombre: "Arquitectura de Software",creditos:3,idRequisitos:"",tipo:"obligatoria", nota:0,completada:false},
-                    materia40:{id:39,nombre: "Intro a los sistemas inteligentes",creditos:3,idRequisitos:"",tipo:"obligatoria", nota:0,completada:false},
-                    materia41:{id:40,nombre: "Lenguajes de programación",creditos:3,idRequisitos:"",tipo:"obligatoria", nota:0,completada:false},
-                    materia42:{id:41,nombre: "Compu paralela y distribuida",creditos:3,idRequisitos:"",tipo:"obligatoria", nota:0,completada:false},
-                    materia43:{id:42,nombre: "Computación visual",creditos:3,idRequisitos:"",tipo:"obligatoria", nota:0,completada:false},
-                    materia44:{id:43,nombre: "Criptografia",creditos:3,idRequisitos:"",tipo:"obligatoria", nota:0,completada:false},
-                    materia45:{id:44,nombre: "Modelos estocasticos",creditos:3,idRequisitos:"",tipo:"obligatoria", nota:0,completada:false},
-                    materia46:{id:45,nombre: "Pensamiento Sistemico",creditos:3,idRequisitos:[37],tipo:"obligatoria", nota:0,completada:false}
-                    ,
-                    materia47:{id:46,nombre: "Arquitectura de Infraestr y TICs",creditos:3,idRequisitos:[37,38],tipo:"obligatoria", nota:0,completada:false},
-                    materia48:{id:47,nombre: "Taller de Proyectos Interdisciplinarios",creditos:3,idRequisitos:"",tipo:"obligatoria", nota:0,completada:false},
-                    materia49:{id:48,nombre: "Trabajo de Grado",creditos:6,idRequisitos:"",tipo:"obligatoria", nota:0,completada:false},
-                    materia50:{id:49,nombre: "electiva1",creditos:3,idRequisitos:"",tipo:"electiva", nota:0,completada:false},
-                    materia51:{id:50,nombre: "electiva2",creditos:3,idRequisitos:"",tipo:"electiva", nota:0,completada:false},
-                    materia52:{id:51,nombre: "electiva3",creditos:2,idRequisitos:"",tipo:"electiva", nota:0,completada:false},
-                    materia53:{id:52,nombre: "SABER-PRO",creditos:0,idRequisitos:"",tipo:"otros", nota:0,completada:false},
-                    materia54:{id:53,nombre: "PASANTIA",creditos:0,idRequisitos:"",tipo:"otros", nota:0,completada:false},
+                    materia38:{id:37,nombre: "Sistemas de info",creditos:3,idRequisitos:[45],tipo:"obligatoria", nota:4.5,completada:true},
+                    materia39:{id:38,nombre: "Arquitectura de Software",creditos:3,idRequisitos:"",tipo:"obligatoria", nota:4.2,completada:true},
+                    materia40:{id:39,nombre: "Intro a los sistemas inteligentes",creditos:3,idRequisitos:"",tipo:"obligatoria", nota:4.1,completada:true},
+                    materia41:{id:40,nombre: "Lenguajes de programación",creditos:3,idRequisitos:"",tipo:"obligatoria", nota:3.9,completada:true},
+                    materia42:{id:41,nombre: "Compu paralela y distribuida",creditos:3,idRequisitos:"",tipo:"obligatoria", nota:4.2,completada:true},
+                    materia43:{id:42,nombre: "Computación visual",creditos:3,idRequisitos:"",tipo:"obligatoria", nota:3.4,completada:true},
+                    materia44:{id:43,nombre: "Intro a la Criptografia",creditos:3,idRequisitos:"",tipo:"obligatoria", nota:5.0,completada:true},
+                    materia45:{id:44,nombre: "Modelos estocasticos",creditos:3,idRequisitos:"",tipo:"obligatoria", nota:4.1,completada:true},
+                    materia46:{id:45,nombre: "Pensamiento Sistemico",creditos:3,idRequisitos:"",tipo:"obligatoria", nota:4.6,completada:true},
+                    materia47:{id:46,nombre: "Arquitectura de Infraestr y TICs",creditos:3,idRequisitos:[38],tipo:"obligatoria", nota:4.5,completada:true},
+                    materia48:{id:47,nombre: "Taller de Proyectos Interdisciplinarios",creditos:3,idRequisitos:"",tipo:"obligatoria", nota:5.0,completada:true},
+                    materia49:{id:49,nombre: "Cultura Contemporanea de Alemania",creditos:2,idRequisitos:"",tipo:"electiva", nota:3.8,completada:true},
+                    materia50:{id:50,nombre: "Astronomía para todos",creditos:3,idRequisitos:"",tipo:"electiva", nota:5.0,completada:true},
+                    materia51:{id:51,nombre: "Movilidad y transporte",creditos:2,idRequisitos:"",tipo:"electiva", nota:4.4,completada:true},
+                    materia52:{id:52,nombre: "TRABAJO DE GRADO",creditos:6,idRequisitos:"",tipo:"otros", nota:4.8,completada:true},
+                    materia53:{id:53,nombre: "Redes neuronales",creditos:4,idRequisitos:"",tipo:"otros", nota:4.5,completada:true},
+                    materia54:{id:54,nombre: "Introducción a la IA",creditos:4,idRequisitos:"",tipo:"otros", nota:5.0,completada:true},
                 },
                 semestres:{
                     1:[0,1,2,3,4],
@@ -129,8 +131,12 @@
                     6:[22,23,24],
                     7:[25,26,27],
                     8:[28,29,30],
-                    9:[31,32,33,34,35,36]
+                    9:[31,32,33,34,35,36],
+                    10:[37,38,39,40,41,44],
+                    11:[46,42,43,52,53,54,49],
+                    12:[45,47,50,51]
                 },
+                promedio: "4.1",
                 temp:""
                 
             },
@@ -167,6 +173,9 @@
 
                     }
                     return arr;
+                },
+                hayMateriasSinCompletar(){
+                    return this.materias && Object.keys(this.materias).some(materia=>!this.materias[materia].completada);
                 }
             }
         })
