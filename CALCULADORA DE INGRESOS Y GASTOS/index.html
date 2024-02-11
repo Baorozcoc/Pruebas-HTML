@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="esp">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="./money.png">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <title>Calculadora de gastos e ingresos</title>
+</head>
+<body>
+    <div id="app">
+        <div id="container">
+            <header>
+                <button v-on:click="openModal()" class="main-button">Añadir</button>
+                <div id="credits">Creado por: Berny Orozco C.</div>
+            </header>
+            <section class="title-container">
+                <div class="leftover">
+                    <h4>Restante:</h4>
+                    <h1>{{moneyFormat(total("income") - total("bill"))}}</h1>
+                </div>
+                <div class="total-container">
+                    <div class="total">
+                        <h6>Ingresos:</h6>
+                        <h3 class="income">{{moneyFormat(total("income"))}}</h3>
+                    </div>
+                    <div class="total">
+                        <h6>Gastos:</h6>
+                        <h3 class="bill">{{moneyFormat(total("bill"))}}</h3>
+                    </div>
+                </div>
+            </section>
+            <div class="subcontainer">
+                <div v-for="movement in movements" class="card">
+                    <div class="title">
+                        {{movement.concept}}:
+                    </div>
+                    <div class="text" :class="{ bill: movement.type==='bill', income: movement.type==='income' }">
+                        {{moneyFormat(movement.amount)}}
+                    </div>
+                    <button class="x-button" v-on:click="deleteMovement(movement)">X</button>
+                </div>
+            </div>
+            <div class="modal-create" v-if="isModalOpen">
+                <button class="x-button" v-on:click="closeModal()">X</button>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script>
+        const app=new Vue({
+            el:'#app',
+            data:{
+                movements:[
+                    {concept: "Salario", amount: 1950000, type: "income"},
+                    {concept: "Ayuda de Nicol", amount: 200000, type: "income"},
+                    {concept: "Ahorro", amount: 1000000, type: "bill"},
+                    {concept: "FNA", amount: 120000, type: "bill"},
+                    {concept: "Nequi", amount: 30000, type: "bill"},
+                    {concept: "Cuota de Banco CS", amount: 75000, type: "bill"},
+                    {concept: "Aporte a la casa", amount: 100000, type: "bill"},
+                    {concept: "Gastos generales y buses", amount: 75000, type: "bill"},
+                    {concept: "Planes con Nicol", amount: 300000, type: "bill"},
+                    {concept: "Para mi", amount: 300000, type: "bill"},
+                ],
+                isModalOpen: false,
+            },
+            methods:{
+                total(type){
+                    let sum=0;
+                    if(this.movements && this.movements.length){
+                        this.movements.forEach(movement => {
+                            if(movement.type===type) sum+=movement.amount;
+                        });
+                    }
+                    return sum;
+                },
+                moneyFormat(number){
+                    return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(
+                        number,
+                    );
+                },
+                deleteMovement(currentMovement){
+                    let index= this.movements.findIndex((movement)=>JSON.stringify(currentMovement)===JSON.stringify(movement));
+                    if(index!==-1) this.movements.splice(index,1);
+                },
+                openModal(){
+                    if(!this.isModalOpen) this.isModalOpen= true;
+                },
+                closeModal(){
+                    this.isModalOpen= false;
+                }
+            }
+        })
+    </script>
+</body>
+</html>
