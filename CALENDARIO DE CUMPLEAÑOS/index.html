@@ -4,60 +4,79 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="./pencil.png">
+    <link rel="icon" href="./cake.png">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-    <title>Mi bloc de notas online</title>
+    <title>Calendario de eventos</title>
 </head>
 <body>
     <div id="app">
         <div id="container">
-            <div id="subcontainer">
-                <h1 id="title">Mi bloc de notas online</h1>
-                <textarea id="text" rows="30"></textarea>
-                <div class="buttons">
-                    <button v-on:click="copyText()" class="mainbutton">Copiar</button>
-                    <button v-on:click="saveText()" class="mainbutton">Guardar</button>
-                    <button v-on:click="loadText()" class="mainbutton">Cargar</button>
-                    <button v-on:click="cleanText()" class="secondarybutton">Limpiar</button>
+            <div  v-for="(month, index) in Object.keys(calendar)" :key="index" class="month-container">
+                <h5 class="month-container__title">{{month}}</h5>
+                <div class="month-container__events">
+                    <div v-for="event in calendar[month]" class="month-container__events__card" :class="{ 'birthday': event.type==='birthday' }">
+                        <p class="number">{{event.day}}</p>
+                        <p class="event">{{event.event}}</p>
+                    </div>
                 </div>
             </div>
-            <div id="credits">Creado por: Berny Alejandro Orozco Córdoba</div>
+            <div id="credits">Creado por: Berny Orozco</div>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
     <script>
         const app=new Vue({
             el:'#app',
-            data:{},
-            methods:{
-                saveText(){
-                    let text=document.getElementById('text').value;
-                    sessionStorage.setItem("_mytext", text);
-                    if(text) window.alert("Se ha guardado exitosamente tu texto!");
-                    else window.alert("Se ha guardado un texto vacío!");
-                },
-                loadText(){
-                    let text= sessionStorage.getItem("_mytext");
-                    if(text) document.getElementById('text').value= text;
-                    else window.alert("No hay texto guardado");
-                },
-                cleanText(){
-                    document.getElementById('text').value= "";
-                },
-                async copyText() {
-                    let text=document.getElementById('text').value;
-                    try {
-                        await navigator.clipboard.writeText(text);
-                        window.alert("Se copió tu texto");
-                    } catch (err) {
-                        window.alert("Ocurrió un error al copiar tu texto");
-                    }
+            data:{
+                //Falta: Fabián, Abuelita Gladys, Andrés Rodriguez, Johan Cuberos,
+                calendar: {
+                    Enero: [
+                        {day: 1, event: "Inicio de año", type: 'non-important'},
+                        {day: 6, event: "Cumple BRAYAN PORTELA", type: "birthday"}
+                    ],
+                    Febrero: [
+                        {day: 3, event: "Cumple SARAHY", type: "birthday"},
+                        {day: 4, event: "Cumple DIEGO IRREÑO", type: "birthday"},
+                        {day: 8, event: "Mi cumpleaños", type: "birthday"}
+                    ],
+                    Marzo: [
+                        {day: 2, event: "Cumple DON JOSÉ", type: "birthday"},
+                        {day: 29, event: "Cumple JOHAN", type: "birthday"}
+                    ],
+                    Abril: [
+                        {day: 11, event: "Cumple YULI", type: "birthday"},
+                        {day: 20, event: "BODA", type: 'important'}
+                    ],
+                    Mayo: [],
+                    Junio: [
+                        {day: 19, event: "Cumple MOTHERCITA", type: "birthday"},
+                        {day: 20, event: "Cumple NICOL <3", type: "birthday"}
+                    ],
+                    Julio: [],
+                    Agosto: [],
+                    Septiembre: [],
+                    Octubre: [
+                        {day: 31, event: "Halloween", type: 'non-important'}
+                    ],
+                    Noviembre: [
+                        {day: 1, event: "Cumple DOÑA PATRICIA", type: "birthday"},
+                        {day: 14, event: "Cumple ALEJA RODRIGUEZ", type: "birthday"},
+                        {day: 16, event: "Cumple CARLOS ALZATE", type: "birthday"},
+                        {day: 21, event: "Cumple TIA STELLA", type: "birthday"},
+                        {day: 22, event: "Cumple ABUELITA MARINA", type: "birthday"}
+                    ],
+                    Diciembre: [
+                        {day: 24, event: "Navidad", type: 'non-important'},
+                        {day: 27, event: "Cumple GERMÁN", type: "birthday"},
+                        {day: 31, event: "Fin de año", type: "non-important"}
+                    ],
                 }
-            }
+            },
+            methods:{}
         })
     </script>
 </body>
