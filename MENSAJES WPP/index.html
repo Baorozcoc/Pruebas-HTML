@@ -6,10 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="./whatsapp.png">
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
     <title>Mensajes directos Whatsapp</title>
 </head>
 <body>
@@ -19,9 +19,9 @@
             <div id="subcontainer">
                 <div class="subtitle">Envía mensajes de Whatsapp sin agregar a contactos, ¡Solo con un click!</div>
                 <label for="code-select" class="label">Código del país*</label>
-                <select name="codes" id="code-select"  class="text">
+                <select name="codes" id="code-select" class="text">
                     <option value="57" selected>+57 (Colombia)</option>
-                    <option v-for="(code, index) in countries" value="code">+{{code}}</option>
+                    <option v-for="(country, index) in countries" value="country.code">+{{country.code}} ({{country.name}})</option>
                 </select>
                 <label for="phone" class="label">Número*</label>
                 <input type="number" id="phone" placeholder="XXXXXXXXXX"  class="text">
@@ -35,12 +35,14 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
     <script type="module">
+        import countries from './countries.json';
+
         const app=new Vue({
             el:'#app',
             data:{
                 basicUrl: "https://wa.me/",
                 phoneError: "",
-                countries: ["93","358","355","213","1684","376","244","1264","672","1268","54","374","297",
+                /*countries: ["93","358","355","213","1684","376","244","1264","672","1268","54","374","297",
                 "43","994","1242","973","880","1246","375","32","501","229","1441","975","591","387","267","55",
                 "246","673","359","226","257","855","237","1","238"," 345","236","235","56","86","61",
                 "269","242","243","682","506","225","385","53","357","420","45","253","1767","1849","593","20",
@@ -54,24 +56,25 @@
                 "40","7","250","262","590","290","1869","1758","590","508","1784","685","378","239","966","221",
                 "381","248","232","65","421","386","677","252","27","211","500","34","94","249","7",
                 "268","46","41","963","886","992","255","66","670","228","690","676","1868","216","90","993","1649",
-                "688","256","380","971","44","1","598","998","678","58","84","1284","1340","681","967","260","263"]
+                "688","256","380","971","44","1","598","998","678","58","84","1284","1340","681","967","260","263"]*/
             },
             methods:{
                 saveText(){
+                    console.log(this.countriesReal);
                     let number= $( "#phone" ).val();
-                    //Pendiente por mejorar: Códigos de paises, animación cada vez que haya error, verificar códigos(muchos no sirven)
-                    if(!number||number.length!==10){
+                    let code= $( "#code-select" ).val();
+
+                    if(!number||(number.length!==10 && code==="57")){
                         $( "#phone" ).removeClass('error');
                         $( "#phone" ).addClass('error');
-                        if(!number) this.phoneError= "Por favor digite un número válido";
-                        else if(number.length!==10) this.phoneError= "Número incorrecto";
+                        if(!number) this.phoneError= "Por favor digite un número";
+                        else if(number.length!==10 && code==="57") this.phoneError= "Longitud inválida";
                         else this.phoneError= "Por favor digite un número válido";
                         return;
                     } else {
                         $( "#phone" ).removeClass('error');
                         this.phoneError="";
                     }
-                    let code= $( "#code-select" ).val();
                     let message= $( "#text" ).val();
                     let url=message
                     ?`${this.basicUrl}${code}${number}?text=${encodeURIComponent(message)}`
